@@ -1,0 +1,130 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class CoffeeShop {
+   private String name;
+   private List<MenuItem> menu;
+   private List<String> orders;
+
+   public CoffeeShop(String name, List<MenuItem> menu) {
+       this.name = name;
+       this.menu = menu;
+       this.orders = new ArrayList<>();
+   }
+
+   public void addOrder(String item) {
+       boolean itemFound = false;
+       for (MenuItem menuItem : menu) {
+           if (menuItem.getItem().equals(item)) {
+               orders.add(item);
+               itemFound = true;
+               break;
+           }
+       }
+       if (!itemFound) {
+           System.out.println("This item is currently unavailable!");
+       }
+   }
+
+   public String fulfillOrder() {
+       if (!orders.isEmpty()) {
+           String item = orders.remove(0);
+           return "The " + item + " is ready!";
+       } else {
+           return "All orders have been fulfilled!";
+       }
+   }
+
+   public List<String> listOrders() {
+       return orders;
+   }
+
+   public double dueAmount() {
+       double total = 0;
+       for (String order : orders) {
+           for (MenuItem menuItem : menu) {
+               if (menuItem.getItem().equals(order)) {
+                   total += menuItem.getPrice();
+                   break;
+               }
+           }
+       }
+       return total;
+   }
+
+   public String cheapestItem() {
+       MenuItem cheapest = null;
+       for (MenuItem menuItem : menu) {
+           if (cheapest == null || menuItem.getPrice() < cheapest.getPrice()) {
+               cheapest = menuItem;
+           }
+       }
+       return cheapest.getItem();
+   }
+
+   public List<String> drinksOnly() {
+       List<String> drinks = new ArrayList<>();
+       for (MenuItem menuItem : menu) {
+           if (menuItem.getType().equals("drink")) {
+               drinks.add(menuItem.getItem());
+           }
+       }
+       return drinks;
+   }
+
+   public List<String> foodOnly() {
+       List<String> food = new ArrayList<>();
+       for (MenuItem menuItem : menu) {
+           if (menuItem.getType().equals("food")) {
+               food.add(menuItem.getItem());
+           }
+       }
+       return food;
+   }
+}
+
+class MenuItem {
+   private String item;
+   private String type;
+   private double price;
+
+   public MenuItem(String item, String type, double price) {
+       this.item = item;
+       this.type = type;
+       this.price = price;
+   }
+
+   public String getItem() {
+       return item;
+   }
+
+   public String getType() {
+       return type;
+   }
+
+   public double getPrice() {
+       return price;
+   }
+}
+
+public class Main {
+   public static void main(String[] args) {
+       List<MenuItem> menuItems = new ArrayList<>();
+       menuItems.add(new MenuItem("Coffee", "drink", 2.50));
+       menuItems.add(new MenuItem("Tea", "drink", 2.00));
+       menuItems.add(new MenuItem("Croissant", "food", 3.00));
+       menuItems.add(new MenuItem("Muffin", "food", 2.50));
+
+       CoffeeShop coffeeShop1 = new CoffeeShop("Starbucks", menuItems);
+
+       coffeeShop1.addOrder("Coffee");
+       coffeeShop1.addOrder("Bagel");
+       System.out.println(coffeeShop1.listOrders());
+       System.out.println(coffeeShop1.fulfillOrder());
+       System.out.println(coffeeShop1.fulfillOrder());
+       System.out.println(coffeeShop1.dueAmount());
+       System.out.println(coffeeShop1.cheapestItem());
+       System.out.println(coffeeShop1.drinksOnly());
+       System.out.println(coffeeShop1.foodOnly());
+   }
+}
